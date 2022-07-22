@@ -12,7 +12,8 @@ import { NotesModule } from './notes/notes.module';
       password: 'postgres',
       database: 'notesdb',
       entities: ['dist/**/*.entity{.ts,.js}'],
-      synchronize: false,
+      // In production, should be using migrations!
+      synchronize: true,
       retryDelay: 3000,
       retryAttempts: 10,
     }),
