@@ -7,44 +7,35 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
+import { CreateNoteDto } from '../dto/create-note.dto';
+import { NotesService } from '../services/notes.service';
 
 @Controller('api/notes')
 export class NotesController {
+  constructor(private notesService: NotesService) {}
+
   @Get()
-  findAll() {
-    return [
-      {
-        id: 1,
-        title: 'Important Info',
-        content: 'Some importan information',
-        archived: false,
-      },
-      {
-        id: 2,
-        title: 'Grosery List',
-        content: 'Carrots, cheese',
-        archived: true,
-      },
-    ];
+  getAll() {
+    return this.notesService.getAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number) {
-    return id;
+  getNoteById(@Param('id') id: number) {
+    return this.notesService.getNoteById(id);
   }
 
   @Post()
-  create(@Body() body: any) {
-    return body;
+  insert(@Body() body: CreateNoteDto) {
+    return this.notesService.insert(body);
   }
 
   @Put(':id')
-  update(@Param('id') id: number, @Body() body: any) {
-    return body;
+  update(@Param('id') id: number, @Body() body: CreateNoteDto) {
+    return this.notesService.update(id, body);
   }
 
   @Delete(':id')
   delete(@Param('id') id: number) {
-    return true;
+    return this.notesService.delete(id);
   }
 }
