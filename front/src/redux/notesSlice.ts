@@ -4,14 +4,16 @@ import { Note } from "../components/NotesList";
 
 type notesState = {
   notes: Note[],
-  status: string
+  status: string,
   error: string | null | undefined,
+  showingArchived: boolean,
 }
 
 const initialState: notesState = {
   notes: [],
   status: 'idle',
   error: null,
+  showingArchived: false,
 }
 
 export const noteSlice = createSlice({
@@ -24,11 +26,15 @@ export const noteSlice = createSlice({
   },
   extraReducers(builder) {
     builder
+      .addCase(getAll.pending, (state, action) => {
+        state.status = 'loading'
+      })
       .addCase(getAll.fulfilled, (state, action) => {
         // Copy previous state and add new notes fetched
         return {
           ...state,
           status: 'succeeded',
+          showingArchived: false,
           notes: action.payload
         }
       })
@@ -46,6 +52,15 @@ export const noteSlice = createSlice({
         )
       })
 
+      // * getArchived extra reducer
+      .addCase(getAllArchived.fulfilled, (state, action) => {
+        return {
+          ...state,
+          status: 'succeeded',
+          showingArchived: true,
+          notes: action.payload
+        }
+      })
   },
 })
 
@@ -82,6 +97,15 @@ export const updateNote = createAsyncThunk(
     return response.data
   }
 )
+
+// * Get Archived Notes
+export const getAllArchived = createAsyncThunk(
+  'notes/getAllArchived',
+  async (_, thunkAPI) => {
+  const response = await axios.get('/api/notes/archived')
+  // thunkAPI.dispatch(getAllArchived())
+  return response.data
+})
 
 export default noteSlice.reducer;
 

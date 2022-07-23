@@ -1,8 +1,9 @@
-import { DeleteOutlined, EditOutlined, FolderAddOutlined } from '@ant-design/icons';
-import { Button, Card, Col, List, Modal, Row } from 'antd'
+import { DeleteOutlined, EditOutlined, FileOutlined, FolderAddOutlined } from '@ant-design/icons';
+import { Button, Card, Col, List, Modal, Row, Space } from 'antd'
+import Meta from 'antd/lib/card/Meta';
 import { Dispatch, FC, SetStateAction } from 'react';
 import { useAppDispatch } from '../redux/hooks';
-import { deleteNote, updateNote } from '../redux/notesSlice';
+import { deleteNote } from '../redux/notesSlice';
 
 export type Note = {
   id: number,
@@ -51,16 +52,70 @@ const NotesList: FC<NotesListProps> = ({
 
   return (
     <List
-      grid={{ gutter: 16, column: 2 }}
+      grid={{
+        gutter: 16,
+        xs: 1,
+        sm: 2,
+        md: 3,
+        lg: 3,
+        xl: 3,
+        xxl: 3,
+      }}
       dataSource={notes}
       renderItem={(note: Note) => (
         <List.Item>
           <Card
             hoverable
-            title={note.title}
+            // title={note.title}
           >
-            <h2>{note.content}</h2>
-            <Row>
+            <Meta
+              avatar={<FileOutlined style={{fontSize: "3em"}}/>}
+              title={
+                <>
+                  <h2>{note.title}</h2>
+                </>
+              }
+              description={
+                <>
+                  <p>{note.content}</p>
+                  <Space>
+                    <Col >
+                      <Button
+                        icon={<EditOutlined />}
+                        size="large"
+                        role="button"
+                        onClick={() => editHandler(note)}
+                      >
+                        Edit
+                      </Button>
+                    </Col>
+                    <Col >
+                      <Button
+                        icon={<FolderAddOutlined />}
+                        size="large"
+                        role="button"
+                        // onClick={}
+                      >
+                        Archive
+                      </Button>
+                    </Col>
+                    <Col >
+                      <Button
+                        icon={<DeleteOutlined />}
+                        size="large"
+                        role="button"
+                        onClick={() => deleteHandler(note)}
+                      >
+                        Delete
+                      </Button>
+                    </Col>
+                  </Space>
+                </>
+              }
+            />
+
+            {/* <h3>{note.content}</h3> */}
+            {/* <Row>
               <Col flex="1 1 30px">
                 <Button
                   icon={<EditOutlined />}
@@ -83,13 +138,12 @@ const NotesList: FC<NotesListProps> = ({
                 <Button
                   icon={<DeleteOutlined />}
                   role="button"
-                  // onClick={() => dispatch(deleteNote(note.id))}
                   onClick={() => deleteHandler(note)}
                 >
                   Delete
                 </Button>
               </Col>
-            </Row>
+            </Row> */}
           </Card>
         </List.Item>
       )}

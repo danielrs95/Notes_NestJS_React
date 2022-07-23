@@ -19,6 +19,11 @@ export class NotesController {
     return this.notesService.getAll();
   }
 
+  @Get('/archived')
+  getAllArchived() {
+    return this.notesService.getAllArchived();
+  }
+
   @Get(':id')
   getNoteById(@Param('id') id: number) {
     return this.notesService.getNoteById(id);

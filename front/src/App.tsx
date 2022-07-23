@@ -1,12 +1,12 @@
 import { CheckOutlined, CloseOutlined, SaveOutlined } from '@ant-design/icons';
-import { Button, Form, Layout, notification, PageHeader } from 'antd';
+import { Button, Col, Form, Layout, notification, PageHeader, Row, Space } from 'antd';
 import Modal from 'antd/lib/modal/Modal';
 import { useEffect, useState } from 'react';
 import FormNote from './components/FormNote';
 import LoadingSpin from './components/LoadingSpin';
 import NotesList, { Note } from './components/NotesList';
 import { useAppDispatch, useAppSelector } from './redux/hooks';
-import { getAll, insert, updateNote } from './redux/notesSlice';
+import { getAll, getAllArchived, insert, updateNote } from './redux/notesSlice';
 import { RootState } from './store';
 
 const { Content } = Layout;
@@ -23,9 +23,13 @@ const App = () => {
   // * ========== Mapped from state ==========
   const notesStatus = useAppSelector((state: RootState) => state.notes.status)
   const notesFromState = useAppSelector((state: RootState) => state.notes.notes)
+  const showArchived = useAppSelector((state: RootState) => state.notes.showingArchived)
 
   // * ========== Handlers ==========
-  const buttonOnClick = () => setShowModal(true)
+  const addNoteOnClick = () => setShowModal(true)
+  const showArchivedOnClick = () => {
+    showArchived ? dispatch(getAll()) : dispatch(getAllArchived())
+  }
 
   const submitNote = async (note: Partial<Note>) => {
     if (note.id) {
@@ -53,7 +57,6 @@ const App = () => {
           formNote.resetFields()
         })
     }
-
   }
 
   const onOkModal = () => {
@@ -70,15 +73,31 @@ const App = () => {
   return (
     <Layout
       style={{
-        maxHeight: '100vh',
+        height: '100vh',
         width: '100vw'
       }}
     >
-      <PageHeader
-        title="My notes"
-        subTitle={<Button onClick={buttonOnClick}>Add note</Button>}
-        style={{ padding: '10px 50px' }}
-      />
+      <PageHeader>
+        <span style={{
+          fontSize: '4em',
+          padding: '10px 50px'
+        }}>
+          { showArchived ? "Archived" : "My notes"}
+        </span>
+        <Space>
+          <Button
+            onClick={addNoteOnClick}
+            disabled={showArchived}
+          >
+            Add note
+          </Button>
+          <Button
+            onClick={showArchivedOnClick}
+          >
+            { showArchived ? "Back to Notes" : "Show Archived"}
+          </Button>
+        </Space>
+      </PageHeader>
       <Content
         style={{padding: '0 50px' }}
       >

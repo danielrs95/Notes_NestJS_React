@@ -16,6 +16,10 @@ export class NotesService {
     return this.notesRepository.findBy({ archived: false });
   }
 
+  getAllArchived() {
+    return this.notesRepository.findBy({ archived: true });
+  }
+
   getNoteById(id: number) {
     return this.notesRepository.findOneBy({ id });
   }
