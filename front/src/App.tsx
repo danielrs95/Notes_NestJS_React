@@ -108,11 +108,16 @@ const App = () => {
             notes={notesFromState}
             setNote={setNote}
             setShowModal={setShowModal}
+            showArchived={showArchived}
           />
         ) }
       </Content>
       <Modal
-        title={ note ? "Update note" :"Add note"}
+        title={
+          note
+            ? <span style={{fontSize: "2em"}}>Edit note</span>
+            : <span style={{fontSize: "2em"}}>Add note</span>
+        }
         centered
         visible={showModal}
         onCancel={() => setShowModal(false)}

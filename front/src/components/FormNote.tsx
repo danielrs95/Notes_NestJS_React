@@ -25,6 +25,7 @@ const FormNote: FC<FormNoteProps> = ({
       onFinish={onSubmit}
       initialValues={initialValues}
       form={form}
+      size='large'
       labelCol={{ span: 4 }}
       wrapperCol={{ span: 18 }}
       >

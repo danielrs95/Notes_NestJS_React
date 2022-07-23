@@ -102,10 +102,38 @@ export const updateNote = createAsyncThunk(
 export const getAllArchived = createAsyncThunk(
   'notes/getAllArchived',
   async (_, thunkAPI) => {
-  const response = await axios.get('/api/notes/archived')
-  // thunkAPI.dispatch(getAllArchived())
-  return response.data
-})
+    const response = await axios.get('/api/notes/archived')
+    return response.data
+  }
+)
+
+// * Archive Note
+export const archiveNote = createAsyncThunk(
+  'notes/archiveNote',
+  async (note: Partial<Note>, thunkAPI) => {
+    const modifiedNote = {
+      ...note,
+      archived: true,
+    }
+    const response = await axios.put(`/api/notes/${note.id}`, modifiedNote)
+    thunkAPI.dispatch(getAll())
+    return response.data
+  }
+)
+// * Restore Note
+export const restoreNote = createAsyncThunk(
+  'notes/restoreNote',
+  async (note: Partial<Note>, thunkAPI) => {
+    const modifiedNote = {
+      ...note,
+      archived: false,
+    }
+    const response = await axios.put(`/api/notes/${note.id}`, modifiedNote)
+    thunkAPI.dispatch(getAll())
+    return response.data
+  }
+)
+
 
 export default noteSlice.reducer;
 
