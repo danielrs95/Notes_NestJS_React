@@ -1,8 +1,8 @@
-import { DeleteOutlined, FolderAddOutlined, PlusOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, FolderAddOutlined } from '@ant-design/icons';
 import { Button, Card, Col, List, Modal, Row } from 'antd'
-import { FC } from 'react';
+import { Dispatch, FC, SetStateAction } from 'react';
 import { useAppDispatch } from '../redux/hooks';
-import { deleteNote } from '../redux/notesSlice';
+import { deleteNote, updateNote } from '../redux/notesSlice';
 
 export type Note = {
   id: number,
@@ -13,12 +13,16 @@ export type Note = {
 
 type NotesListProps = {
   notes: Note[],
+  setNote: Dispatch<SetStateAction<Note | undefined>>,
+  setShowModal: Dispatch<SetStateAction<boolean>>,
 }
 
 const { confirm } = Modal;
 
 const NotesList: FC<NotesListProps> = ({
   notes,
+  setNote,
+  setShowModal,
 }) => {
   // * ========== Variables ==========
   const dispatch = useAppDispatch()
@@ -40,6 +44,11 @@ const NotesList: FC<NotesListProps> = ({
     });
   }
 
+  const editHandler = (note: Note) => {
+    setNote(note)
+    setShowModal(true)
+  }
+
   return (
     <List
       grid={{ gutter: 16, column: 2 }}
@@ -54,9 +63,9 @@ const NotesList: FC<NotesListProps> = ({
             <Row>
               <Col flex="1 1 30px">
                 <Button
-                  icon={<PlusOutlined />}
+                  icon={<EditOutlined />}
                   role="button"
-                  // onClick={editOnClick}
+                  onClick={() => editHandler(note)}
                 >
                   Edit
                 </Button>

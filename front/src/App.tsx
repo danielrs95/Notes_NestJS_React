@@ -6,7 +6,7 @@ import FormNote from './components/FormNote';
 import LoadingSpin from './components/LoadingSpin';
 import NotesList, { Note } from './components/NotesList';
 import { useAppDispatch, useAppSelector } from './redux/hooks';
-import { getAll, insert } from './redux/notesSlice';
+import { getAll, insert, updateNote } from './redux/notesSlice';
 import { RootState } from './store';
 
 const { Content } = Layout;
@@ -18,6 +18,7 @@ const App = () => {
 
   // * ========== States ==========
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [note, setNote] = useState<Note>();
 
   // * ========== Mapped from state ==========
   const notesStatus = useAppSelector((state: RootState) => state.notes.status)
@@ -27,13 +28,32 @@ const App = () => {
   const buttonOnClick = () => setShowModal(true)
 
   const submitNote = async (note: Partial<Note>) => {
-    dispatch(insert(note))
-      .then(() => notification.open({
-        message: 'Success',
-        description: 'Note creation',
-        icon: <CheckOutlined />
-      }))
-      .then(() => setShowModal(false))
+    if (note.id) {
+      dispatch(updateNote(note))
+        .then(() => notification.open({
+          message: 'Success',
+          description: 'Note updated',
+          icon: <CheckOutlined />
+        }))
+        .then(() => {
+          setShowModal(false)
+          setNote(undefined)
+          formNote.resetFields()
+        })
+    } else {
+      dispatch(insert(note))
+        .then(() => notification.open({
+          message: 'Success',
+          description: 'Note creation',
+          icon: <CheckOutlined />
+        }))
+        .then(() => {
+          setShowModal(false)
+          setNote(undefined)
+          formNote.resetFields()
+        })
+    }
+
   }
 
   const onOkModal = () => {
@@ -67,6 +87,8 @@ const App = () => {
         ) : (
           <NotesList
             notes={notesFromState}
+            setNote={setNote}
+            setShowModal={setShowModal}
           />
         ) }
       </Content>
@@ -79,10 +101,11 @@ const App = () => {
         okText="Save"
         okButtonProps={{ icon: <SaveOutlined /> }}
         onOk={onOkModal}
+        afterClose={() => setNote(undefined)}
       >
         <FormNote
           form={formNote}
-          initialValues={{}}
+          initialValues={note}
           onSubmit={submitNote}
         />
       </Modal>

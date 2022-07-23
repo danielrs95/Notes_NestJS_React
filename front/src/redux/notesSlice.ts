@@ -30,7 +30,6 @@ export const noteSlice = createSlice({
       })
       .addCase(getAll.fulfilled, (state, action) => {
         state.status = 'succeeded'
-
         // Add any fetched notes to the array
         state.notes = state.notes.concat(action.payload)
       })
@@ -38,13 +37,25 @@ export const noteSlice = createSlice({
         state.status = 'failed'
         state.error = action.error.message
       })
+
+      // * Insert extra reducer
       .addCase(insert.fulfilled, (state, action) => {
         state.notes.push(action.payload)
       })
+
+      // * Delete extra reducer
       .addCase(deleteNote.fulfilled, (state, action) => {
         // Filter state with the missing note
         state.notes = state.notes.filter(
           note => note.id !== action.payload
+        )
+      })
+
+      // * Update extra reducer
+      .addCase(updateNote.fulfilled, (state, action) => {
+        state.notes = state.notes.map(
+          // If id = payload.id replace value on store with payload
+          note => note.id === action.payload.id ? action.payload : note
         )
       })
   },
@@ -70,6 +81,14 @@ export const deleteNote = createAsyncThunk(
   'notes/deleteNote',
   async (id:number, thunkAPI) => {
     const response = await axios.delete(`/api/notes/${id}`)
+    return response.data
+  }
+)
+
+export const updateNote = createAsyncThunk(
+  'notes/updateNote',
+  async (note: Partial<Note>, thunkAPI) => {
+    const response = await axios.put(`/api/notes/${note.id}`, note)
     return response.data
   }
 )
