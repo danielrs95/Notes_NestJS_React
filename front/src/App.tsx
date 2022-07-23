@@ -3,16 +3,24 @@ import { Button, Form, Layout, notification, PageHeader } from 'antd';
 import Modal from 'antd/lib/modal/Modal';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
 import FormNote from './components/FormNote';
 import NotesList, { Note } from './components/NotesList';
+import { useAppDispatch, useAppSelector } from './redux/hooks';
+import { getNotes } from './redux/notesSlice';
+import { RootState } from './store';
 
 const App = () => {
   // * ========== Variables ==========
   const [formNote] = Form.useForm();
+  const dispatch = useAppDispatch()
 
   // * ========== States ==========
-  const [notes, setNotes] = useState([]);
   const [showModal, setShowModal] = useState<boolean>(false);
+
+  // * ========== Mapped from state ==========
+  const notesStatus = useAppSelector((state: RootState) => state.notes.status)
+  const notesFromState = useAppSelector((state: RootState) => state.notes.notes)
 
   // * ========== Handlers ==========
   const buttonOnClick = () => setShowModal(true)
@@ -36,10 +44,8 @@ const App = () => {
 
   // * ========== UseEffects ==========
   useEffect(() => {
-    axios.get('/api/notes')
-    .then(response => setNotes(response.data))
-    .catch(err => { throw err })
-  }, [])
+    if (notesStatus === 'idle') dispatch(getNotes())
+  }, [dispatch, notesStatus])
 
   return (
     <Layout>
@@ -48,7 +54,7 @@ const App = () => {
         subTitle={<Button onClick={buttonOnClick}>Add note</Button>}
       />
       <NotesList
-        notes={notes}
+        notes={notesFromState}
       />
       <Modal
         title="Create note"
@@ -70,4 +76,16 @@ const App = () => {
   )
 }
 
-export default App
+const mapStateToProps = (state: any) => {
+  const { notes } = state
+  console.log(state)
+  return { notes }
+};
+
+const mapDispatchToProps = {
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(App)

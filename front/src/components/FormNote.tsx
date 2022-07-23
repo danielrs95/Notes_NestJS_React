@@ -16,7 +16,7 @@ const FormNote: FC<FormNoteProps> = ({
 }) => {
   useEffect(() => {
     form?.resetFields();
-  }, [initialValues]);
+  }, [form, initialValues]);
 
   return (
     <Form<Note>
