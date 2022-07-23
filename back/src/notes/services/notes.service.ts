@@ -33,6 +33,6 @@ export class NotesService {
 
   async delete(id: number) {
     await this.notesRepository.delete(id);
-    return true;
+    return id;
   }
 }
