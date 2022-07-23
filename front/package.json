@@ -1,6 +1,7 @@
 {
   "name": "front",
   "private": true,
+  "proxy": "http://127.0.0.1:5000",
   "version": "0.1.0",
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
@@ -12,6 +13,7 @@
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
     "antd": "^4.21.7",
+    "axios": "^0.27.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
