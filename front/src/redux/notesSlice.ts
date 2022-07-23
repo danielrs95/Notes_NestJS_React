@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { Note } from "../components/NotesList";
-import { useAppDispatch } from "./hooks";
 
 type notesState = {
   notes: Note[],
@@ -25,17 +24,13 @@ export const noteSlice = createSlice({
   },
   extraReducers(builder) {
     builder
-      .addCase(getAll.pending, (state, action) => {
-        state.status = 'loading'
-      })
       .addCase(getAll.fulfilled, (state, action) => {
-        state.status = 'succeeded'
-        // Add any fetched notes to the array
-        state.notes = state.notes.concat(action.payload)
-      })
-      .addCase(getAll.rejected, (state, action) => {
-        state.status = 'failed'
-        state.error = action.error.message
+        // Copy previous state and add new notes fetched
+        return {
+          ...state,
+          status: 'succeeded',
+          notes: action.payload
+        }
       })
 
       // * Insert extra reducer
@@ -51,13 +46,6 @@ export const noteSlice = createSlice({
         )
       })
 
-      // * Update extra reducer
-      .addCase(updateNote.fulfilled, (state, action) => {
-        state.notes = state.notes.map(
-          // If id = payload.id replace value on store with payload
-          note => note.id === action.payload.id ? action.payload : note
-        )
-      })
   },
 })
 
@@ -85,10 +73,12 @@ export const deleteNote = createAsyncThunk(
   }
 )
 
+// * Update note
 export const updateNote = createAsyncThunk(
   'notes/updateNote',
   async (note: Partial<Note>, thunkAPI) => {
     const response = await axios.put(`/api/notes/${note.id}`, note)
+    thunkAPI.dispatch(getAll())
     return response.data
   }
 )

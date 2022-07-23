@@ -1,4 +1,4 @@
-import { Col, Form, FormInstance, Input, Row } from 'antd'
+import { Col, Form, FormInstance, Input, Row, Switch } from 'antd'
 import TextArea from 'antd/lib/input/TextArea'
 import { FC, useEffect } from 'react';
 import { Note } from './NotesList'
@@ -7,11 +7,13 @@ type FormNoteProps = {
   form: FormInstance;
   initialValues?: Partial<Note>;
   onSubmit: (note: Partial<Note>) => void;
+  note?: boolean;
 }
 
 const FormNote: FC<FormNoteProps> = ({
   form,
   initialValues,
+  note,
   onSubmit,
 }) => {
   useEffect(() => {
@@ -41,6 +43,14 @@ const FormNote: FC<FormNoteProps> = ({
             <TextArea />
           </Form.Item>
         </Col>
+
+        { note ? (
+          <Col flex="1 1 300px">
+            <Form.Item label="Archive" name="archived">
+              <Switch />
+            </Form.Item>
+          </Col>
+        ) : <></>}
       </Row>
     </Form>
   )

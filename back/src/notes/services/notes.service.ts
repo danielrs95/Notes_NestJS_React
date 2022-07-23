@@ -13,7 +13,7 @@ export class NotesService {
   ) {}
 
   getAll() {
-    return this.notesRepository.find();
+    return this.notesRepository.findBy({ archived: false });
   }
 
   getNoteById(id: number) {

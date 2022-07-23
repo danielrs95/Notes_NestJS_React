@@ -93,12 +93,12 @@ const App = () => {
         ) }
       </Content>
       <Modal
-        title="Create note"
+        title={ note ? "Update note" :"Add note"}
         centered
         visible={showModal}
         onCancel={() => setShowModal(false)}
         cancelButtonProps={{ icon: <CloseOutlined /> }}
-        okText="Save"
+        okText={ note ? "Update" : "Save"}
         okButtonProps={{ icon: <SaveOutlined /> }}
         onOk={onOkModal}
         afterClose={() => setNote(undefined)}
@@ -107,6 +107,7 @@ const App = () => {
           form={formNote}
           initialValues={note}
           onSubmit={submitNote}
+          note={!!note}
         />
       </Modal>
     </Layout>
