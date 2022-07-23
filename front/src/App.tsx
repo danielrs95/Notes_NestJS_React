@@ -1,33 +1,36 @@
-import React, { useEffect } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { CloseOutlined, SaveOutlined } from '@ant-design/icons';
+import { Button, Layout, PageHeader } from 'antd';
+import Modal from 'antd/lib/modal/Modal';
+import { useState } from 'react';
+import FormNote from './components/FormNote';
+import NotesList from './components/NotesList';
 
 function App() {
-  useEffect(() => {
-    fetch('http://localhost:3000/api/notes')
-    .then((response) => response.json())
-    .then(data => console.log(data))
-    .catch(err => console.log(err))
+  // * ========== States ==========
+  const [showModal, setShowModal] = useState<boolean>(false);
 
-  }, [])
+  // * ========== Handlers ==========
+  const buttonOnClick = () => setShowModal(true)
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Layout>
+      <PageHeader
+        title="My notes"
+        subTitle={<Button onClick={buttonOnClick}>Add note</Button>}
+      />
+      <NotesList />
+      <Modal
+        title="Create note"
+        centered
+        visible={showModal}
+        onCancel={() => setShowModal(false)}
+        cancelButtonProps={{ icon: <CloseOutlined /> }}
+        okText="Save"
+        okButtonProps={{ icon: <SaveOutlined /> }}
+      >
+        <FormNote />
+      </Modal>
+    </Layout>
   );
 }
 
