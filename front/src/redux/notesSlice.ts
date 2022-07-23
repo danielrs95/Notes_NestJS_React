@@ -18,34 +18,45 @@ export const noteSlice = createSlice({
   name: 'notes',
   initialState,
   reducers: {
-    insertNote(state, action: PayloadAction<Note>) {
+    insert(state, action: PayloadAction<Note>) {
       state.notes.push(action.payload)
     }
   },
   extraReducers(builder) {
     builder
-      .addCase(getNotes.pending, (state, action) => {
+      .addCase(getAll.pending, (state, action) => {
         state.status = 'loading'
       })
-      .addCase(getNotes.fulfilled, (state, action) => {
+      .addCase(getAll.fulfilled, (state, action) => {
         state.status = 'succeeded'
 
         // Add any fetched notes to the array
         state.notes = state.notes.concat(action.payload)
       })
-      .addCase(getNotes.rejected, (state, action) => {
+      .addCase(getAll.rejected, (state, action) => {
         state.status = 'failed'
         state.error = action.error.message
+      })
+      .addCase(insert.fulfilled, (state, action) => {
+        state.notes.push(action.payload)
       })
   },
 })
 
-// * Create the Thunk Function with createAsyncThunk
-export const getNotes = createAsyncThunk('notes/getNotes', async () => {
+// * Thunk function for fetching all notes
+export const getAll = createAsyncThunk('notes/getAll', async () => {
   const response = await axios.get('/api/notes')
   return response.data
 })
-// export const { getAll } = noteSlice.actions;
+
+// * Add notes
+export const insert = createAsyncThunk(
+  'notes/insert',
+  async (note: Partial<Note>, thunkAPI) => {
+    const response = await axios.post('/api/notes', note)
+    return response.data
+  }
+)
 
 export default noteSlice.reducer;
 

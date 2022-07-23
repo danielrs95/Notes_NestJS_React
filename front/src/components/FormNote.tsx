@@ -31,13 +31,13 @@ const FormNote: FC<FormNoteProps> = ({
         <Form.Item hidden name="archieved" />
 
         <Col flex="1 1 300px">
-          <Form.Item label="Title" name="title" required>
+          <Form.Item label="Title" name="title">
             <Input />
           </Form.Item>
         </Col>
 
         <Col flex="1 1 300px">
-          <Form.Item label="Content" name="content" required>
+          <Form.Item label="Content" name="content">
             <TextArea />
           </Form.Item>
         </Col>

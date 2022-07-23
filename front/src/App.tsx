@@ -1,14 +1,15 @@
 import { CheckOutlined, CloseOutlined, SaveOutlined } from '@ant-design/icons';
 import { Button, Form, Layout, notification, PageHeader } from 'antd';
 import Modal from 'antd/lib/modal/Modal';
-import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
 import FormNote from './components/FormNote';
+import LoadingSpin from './components/LoadingSpin';
 import NotesList, { Note } from './components/NotesList';
 import { useAppDispatch, useAppSelector } from './redux/hooks';
-import { getNotes } from './redux/notesSlice';
+import { getAll, insert } from './redux/notesSlice';
 import { RootState } from './store';
+
+const { Content } = Layout;
 
 const App = () => {
   // * ========== Variables ==========
@@ -26,8 +27,7 @@ const App = () => {
   const buttonOnClick = () => setShowModal(true)
 
   const submitNote = async (note: Partial<Note>) => {
-    console.log(note)
-    await axios.post('/api/notes', note)
+    dispatch(insert(note))
       .then(() => notification.open({
         message: 'Success',
         description: 'Note creation',
@@ -44,18 +44,32 @@ const App = () => {
 
   // * ========== UseEffects ==========
   useEffect(() => {
-    if (notesStatus === 'idle') dispatch(getNotes())
+    if (notesStatus === 'idle') dispatch(getAll())
   }, [dispatch, notesStatus])
 
   return (
-    <Layout>
+    <Layout
+      style={{
+        maxHeight: '100vh',
+        width: '100vw'
+      }}
+    >
       <PageHeader
         title="My notes"
         subTitle={<Button onClick={buttonOnClick}>Add note</Button>}
+        style={{ padding: '10px 50px' }}
       />
-      <NotesList
-        notes={notesFromState}
-      />
+      <Content
+        style={{padding: '0 50px' }}
+      >
+        {notesStatus === 'loading' ? (
+          <LoadingSpin />
+        ) : (
+          <NotesList
+            notes={notesFromState}
+          />
+        ) }
+      </Content>
       <Modal
         title="Create note"
         centered
@@ -76,16 +90,4 @@ const App = () => {
   )
 }
 
-const mapStateToProps = (state: any) => {
-  const { notes } = state
-  console.log(state)
-  return { notes }
-};
-
-const mapDispatchToProps = {
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(App)
+export default App
