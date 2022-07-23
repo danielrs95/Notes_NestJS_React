@@ -1,5 +1,5 @@
 import { DeleteOutlined, FolderAddOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Card, Col, List, Row } from 'antd'
+import { Button, Card, Col, List, Modal, Row } from 'antd'
 import { FC } from 'react';
 import { useAppDispatch } from '../redux/hooks';
 import { deleteNote } from '../redux/notesSlice';
@@ -15,11 +15,30 @@ type NotesListProps = {
   notes: Note[],
 }
 
+const { confirm } = Modal;
+
 const NotesList: FC<NotesListProps> = ({
   notes,
 }) => {
   // * ========== Variables ==========
   const dispatch = useAppDispatch()
+
+  const deleteHandler = (note: Note) => {
+    confirm({
+      title: "Delete",
+      content: "This operation can't be undone, continue?",
+      okText: 'Delete',
+      okType: 'danger',
+      cancelText: 'No',
+      // Return a promise from onOk to later run logic
+      onOk() {
+        return new Promise((resolve) => {
+          // unwrap return a promise wich we can then chain
+          dispatch(deleteNote(note.id)).unwrap().then(() => resolve(true))
+        })
+      },
+    });
+  }
 
   return (
     <List
@@ -55,7 +74,8 @@ const NotesList: FC<NotesListProps> = ({
                 <Button
                   icon={<DeleteOutlined />}
                   role="button"
-                  onClick={() => dispatch(deleteNote(note.id))}
+                  // onClick={() => dispatch(deleteNote(note.id))}
+                  onClick={() => deleteHandler(note)}
                 >
                   Delete
                 </Button>
