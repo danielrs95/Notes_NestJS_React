@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { Note } from "../components/NotesList";
+import { useAppDispatch } from "./hooks";
 
 type notesState = {
   notes: Note[],
@@ -40,6 +41,12 @@ export const noteSlice = createSlice({
       .addCase(insert.fulfilled, (state, action) => {
         state.notes.push(action.payload)
       })
+      .addCase(deleteNote.fulfilled, (state, action) => {
+        // Filter state with the missing note
+        state.notes = state.notes.filter(
+          note => note.id !== action.payload
+        )
+      })
   },
 })
 
@@ -54,6 +61,15 @@ export const insert = createAsyncThunk(
   'notes/insert',
   async (note: Partial<Note>, thunkAPI) => {
     const response = await axios.post('/api/notes', note)
+    return response.data
+  }
+)
+
+// * Delete note
+export const deleteNote = createAsyncThunk(
+  'notes/deleteNote',
+  async (id:number, thunkAPI) => {
+    const response = await axios.delete(`/api/notes/${id}`)
     return response.data
   }
 )
