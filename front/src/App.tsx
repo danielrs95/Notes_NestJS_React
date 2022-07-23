@@ -1,5 +1,5 @@
 import { CheckOutlined, CloseOutlined, SaveOutlined } from '@ant-design/icons';
-import { Button, Col, Form, Layout, notification, PageHeader, Row, Space } from 'antd';
+import { Button, Form, Layout, notification, PageHeader, Space } from 'antd';
 import Modal from 'antd/lib/modal/Modal';
 import { useEffect, useState } from 'react';
 import FormNote from './components/FormNote';
