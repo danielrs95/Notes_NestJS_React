@@ -1,4 +1,4 @@
-import { CheckOutlined, CloseOutlined, SaveOutlined } from '@ant-design/icons';
+import { CheckOutlined, CloseOutlined, FolderAddOutlined, PlusOutlined, SaveOutlined } from '@ant-design/icons';
 import { Button, Form, Layout, notification, PageHeader, Space } from 'antd';
 import Modal from 'antd/lib/modal/Modal';
 import { useEffect, useState } from 'react';
@@ -6,7 +6,7 @@ import FormNote from './components/FormNote';
 import LoadingSpin from './components/LoadingSpin';
 import NotesList, { Note, Tag } from './components/NotesList';
 import { useAppDispatch, useAppSelector } from './redux/hooks';
-import { addTag, getAll, getAllArchived, insert, updateNote } from './redux/notesSlice';
+import { addTag, getAll, getAllArchived, insert, removeTag, updateNote } from './redux/notesSlice';
 import { RootState } from './store';
 
 const { Content } = Layout;
@@ -70,6 +70,10 @@ const App = () => {
     dispatch(addTag(tag))
   }
 
+  const onDeleteTag = async (id:number) => {
+    dispatch(removeTag(id))
+  }
+
   const onOkModal = () => {
     formNote.validateFields()
     .then(() => formNote.submit())
@@ -81,9 +85,10 @@ const App = () => {
     if (notesStatus === 'idle') dispatch(getAll())
   }, [dispatch, notesStatus])
 
+  // Update initialValues of note being shown on Modal
   useEffect(() => {
     if (idLastUpdatedNote !== 0) setInitialValues(lastUpdatedNote[0])
-  }, [notesFromState,idLastUpdatedNote, lastUpdatedNote])
+  }, [notesFromState, idLastUpdatedNote, lastUpdatedNote])
 
   return (
     <Layout
@@ -94,7 +99,7 @@ const App = () => {
     >
       <PageHeader>
         <span style={{
-          fontSize: '4em',
+          fontSize: '3em',
           padding: '10px 50px'
         }}>
           { showArchived ? "Archived" : "My notes"}
@@ -103,11 +108,19 @@ const App = () => {
           <Button
             onClick={addNoteOnClick}
             disabled={showArchived}
+            icon={<PlusOutlined />}
+            size="large"
+            role="button"
+            shape='round'
           >
             Add note
           </Button>
           <Button
             onClick={showArchivedOnClick}
+            icon={<FolderAddOutlined />}
+            size="large"
+            role="button"
+            shape='round'
           >
             { showArchived ? "Back to Notes" : "Show Archived"}
           </Button>
@@ -136,9 +149,18 @@ const App = () => {
         centered
         visible={showModal}
         onCancel={() => setShowModal(false)}
-        cancelButtonProps={{ icon: <CloseOutlined /> }}
+        cancelButtonProps={{
+          icon: <CloseOutlined />,
+          size: "middle",
+          shape: "round"
+        }}
         okText={ initialValues ? "Update" : "Save"}
-        okButtonProps={{ icon: <SaveOutlined /> }}
+        okButtonProps={{
+          icon: <SaveOutlined />,
+          size: "middle",
+          shape: "round",
+          type: "default"
+        }}
         onOk={onOkModal}
         afterClose={() => setInitialValues(undefined)}
       >
@@ -148,6 +170,7 @@ const App = () => {
           initialValues={initialValues}
           onSubmit={submitNote}
           onSubmitTag={submitTag}
+          onDeleteTag={onDeleteTag}
           note={!!initialValues}
         />
       </Modal>

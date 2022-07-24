@@ -1,9 +1,10 @@
-import { PlusOutlined } from '@ant-design/icons';
-import { Button, Col, Divider, Form, FormInstance, Input, List, Row, Select, Space, Switch, Typography } from 'antd'
+import { DeleteOutlined, PlusOutlined, TagOutlined } from '@ant-design/icons';
+import { Button, Col, Divider, Form, FormInstance, Input, List, Row, Select, Space, Switch, Tooltip, Typography } from 'antd'
 import TextArea from 'antd/lib/input/TextArea'
 import { Option } from 'antd/lib/mentions';
 import { FC, useEffect, useState } from 'react';
 import { Note } from './NotesList'
+import VirtualList from 'rc-virtual-list';
 
 type FormNoteProps = {
   form: FormInstance;
@@ -12,6 +13,7 @@ type FormNoteProps = {
   note?: boolean;
   onSubmit: (note: Partial<Note>) => void;
   onSubmitTag: (note: Partial<Note>) => void;
+  onDeleteTag: (id:number) => void;
 }
 
 const FormNote: FC<FormNoteProps> = ({
@@ -21,6 +23,7 @@ const FormNote: FC<FormNoteProps> = ({
   note,
   onSubmit,
   onSubmitTag,
+  onDeleteTag,
 }) => {
   useEffect(() => {
     form?.resetFields();
@@ -60,14 +63,32 @@ const FormNote: FC<FormNoteProps> = ({
         ) : <></>}
 
         { initialValues ? (
-          <Col>
+          <Col style={{ margin: "0px 20px" }}>
             <List
               size="small"
               bordered
             >
-              {initialValues.tags!.map(
-                tag => <List.Item>{tag.text}</List.Item>
-              )}
+              <VirtualList
+                data={initialValues.tags!}
+                height={250}
+                itemKey="tag"
+                style={{margin: "0"}}
+              >
+                {(item) => (
+                  <List.Item>
+                    <TagOutlined />
+                    <h4>{item.text}</h4>
+                    <Tooltip title="Delete tag">
+                      <Button
+                        size='middle'
+                        shape="circle"
+                        icon={<DeleteOutlined />}
+                        onClick={() => onDeleteTag(item.id)}
+                      />
+                    </Tooltip>
+                  </List.Item>
+                )}
+              </VirtualList>
             </List>
             <Form
               form={formTag}
@@ -77,17 +98,19 @@ const FormNote: FC<FormNoteProps> = ({
               layout="inline"
             >
               <Form.Item hidden name="noteId" initialValue={initialValues.id} />
-              <Form.Item label="tag" name="text" style={{width: '70%'}}>
+              <Form.Item label="Tags" name="text" style={{ flex: "1 1 0%", margin: "10px 0" }}>
                 <Input />
               </Form.Item>
-              <Button
-                type="primary"
-                onClick={() => formTag.submit()}
-                // onClick={() => console.log(initialValues)}
-                // htmlType="submit"
-              >
-                Add
-              </Button>
+              <Tooltip title="Add tag">
+                <Button
+                  type="default"
+                  size='middle'
+                  shape="circle"
+                  onClick={() => formTag.submit()}
+                  style={{ margin: "10px 0", flex: "0 1 0" }}
+                  icon={<PlusOutlined />}
+                />
+              </Tooltip>
             </Form>
           </Col>
         ) : null}

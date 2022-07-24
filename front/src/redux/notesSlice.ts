@@ -70,6 +70,29 @@ export const noteSlice = createSlice({
         state.notes.map(note => note.id === noteId ? note.tags.push(action.payload) : note)
         state.idLastUpdatedNote = noteId
       })
+
+      // * Same as addTag
+      .addCase(removeTag.fulfilled, (state, action) => {
+        const idTagDeleted = action.payload
+
+        // Loop trough all notes and return the one
+        // note that has the tag id deleted
+        const noteWithTagDeleted = state.notes.find(note => {
+          return note.tags.some(tag => tag.id === idTagDeleted)
+        })
+
+        // Store the new state
+        const newState = state.notes.map(note => {
+          // Filter tags with the tagID
+          const newTags = note.tags.filter(tag =>  tag.id !== idTagDeleted)
+
+          // We are inside another loop, return current note and append new tags
+          return {...note, tags: newTags}
+        })
+
+        state.notes = newState
+        state.idLastUpdatedNote = noteWithTagDeleted!.id
+      })
   },
 })
 
@@ -153,6 +176,13 @@ export const addTag = createAsyncThunk(
   }
 )
 
-export default noteSlice.reducer;
+// * Delete note
+export const removeTag = createAsyncThunk(
+  'notes/removeTag',
+  async (id:number, thunkAPI) => {
+    const response = await axios.delete(`/api/tags/${id}`)
+    return response.data
+  }
+)
 
-// export const selectAllNotes = (state: RootState) => state.notes
+export default noteSlice.reducer;

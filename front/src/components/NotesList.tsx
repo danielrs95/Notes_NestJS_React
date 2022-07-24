@@ -1,5 +1,5 @@
 import { CheckOutlined, DeleteOutlined, EditOutlined, FileOutlined, FolderAddOutlined } from '@ant-design/icons';
-import { Button, Card, Col, List, Modal, notification, Space } from 'antd'
+import { Button, Card, Col, List, Modal, notification, Row, Space, Tooltip } from 'antd'
 import Meta from 'antd/lib/card/Meta';
 import { Dispatch, FC, SetStateAction } from 'react';
 import { useAppDispatch } from '../redux/hooks';
@@ -81,10 +81,10 @@ const NotesList: FC<NotesListProps> = ({
         gutter: 16,
         xs: 1,
         sm: 2,
-        md: 3,
-        lg: 3,
-        xl: 3,
-        xxl: 3,
+        md: 2,
+        lg: 2,
+        xl: 2,
+        xxl: 2,
       }}
       dataSource={notes}
       renderItem={(note: Note) => (
@@ -93,44 +93,56 @@ const NotesList: FC<NotesListProps> = ({
             hoverable
           >
             <Meta
-              avatar={<FileOutlined style={{fontSize: "2em"}}/>}
-              title={<h2>{note.title}</h2>}
+              avatar={
+                <div
+                  style={{
+                    minHeight: "100%",
+                    fontSize: "2.5em"
+                  }}
+                >
+                  <FileOutlined/>
+                </div>
+              }
+              title={<h3>{note.title}</h3>}
               description={
                 <>
                   <p>{note.content}</p>
-                  <Space>
-                    <Col >
-                      <Button
-                        icon={<EditOutlined />}
-                        size="large"
-                        role="button"
-                        disabled={showArchived}
-                        onClick={() => editHandler(note)}
-                      >
-                        Edit
-                      </Button>
+                  <Row justify='start'>
+                    <Col>
+                      <Tooltip title="Edit">
+                        <Button
+                          icon={<EditOutlined />}
+                          size="middle"
+                          role="button"
+                          shape='circle'
+                          disabled={showArchived}
+                          onClick={() => editHandler(note)}
+                        />
+                      </Tooltip>
                     </Col>
                     <Col >
-                      <Button
-                        icon={<FolderAddOutlined />}
-                        size="large"
-                        role="button"
-                        onClick={() => archiveHandler(note)}
-                      >
-                        { showArchived ? "Restore" : "Archive"}
-                      </Button>
+                      <Tooltip title={ showArchived ? "Restore" : "Archive"}>
+                        <Button
+                          icon={<FolderAddOutlined />}
+                          size="middle"
+                          role="button"
+                          shape='circle'
+                          onClick={() => archiveHandler(note)}
+                        />
+                      </Tooltip>
                     </Col>
                     <Col >
-                      <Button
-                        icon={<DeleteOutlined />}
-                        size="large"
-                        role="button"
-                        onClick={() => deleteHandler(note)}
-                      >
-                        Delete
-                      </Button>
+                      <Tooltip title="Edit">
+                        <Button
+                          icon={<DeleteOutlined />}
+                          size="middle"
+                          role="button"
+                          shape='circle'
+                          onClick={() => deleteHandler(note)}
+                        />
+                      </Tooltip>
                     </Col>
-                  </Space>
+                  </Row>
                 </>
               }
             />
