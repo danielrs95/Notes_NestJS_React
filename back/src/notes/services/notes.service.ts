@@ -14,11 +14,17 @@ export class NotesService {
   ) {}
 
   getAll() {
-    return this.notesRepository.findBy({ archived: false });
+    return this.notesRepository.find({
+      where: { archived: false },
+      relations: { tags: true },
+    });
   }
 
   getAllArchived() {
-    return this.notesRepository.findBy({ archived: true });
+    return this.notesRepository.find({
+      where: { archived: true },
+      relations: { tags: true },
+    });
   }
 
   getNoteById(id: number) {
