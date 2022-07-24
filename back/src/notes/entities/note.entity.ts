@@ -1,4 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToMany,
+  JoinTable,
+} from 'typeorm';
 import { Tag } from './tag.entity';
 
 @Entity()
@@ -15,6 +21,15 @@ export class Note {
   @Column({ default: false })
   archived: boolean;
 
-  @OneToMany(() => Tag, (tag) => tag.note)
+  @ManyToMany(() => Tag, (tag) => tag.notes)
+  @JoinTable({
+    name: 'notes_tags',
+    joinColumn: {
+      name: 'note_id',
+    },
+    inverseJoinColumn: {
+      name: 'tag_id',
+    },
+  })
   tags: Tag[];
 }

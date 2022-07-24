@@ -6,7 +6,8 @@ import FormNote from './components/FormNote';
 import LoadingSpin from './components/LoadingSpin';
 import NotesList, { Note, Tag } from './components/NotesList';
 import { useAppDispatch, useAppSelector } from './redux/hooks';
-import { addTag, getAll, getAllArchived, insert, removeTag, updateNote } from './redux/notesSlice';
+import { getAll, getAllArchived, insert, updateNote } from './redux/notesSlice';
+import { addTag, getAllTags } from './redux/tagsSlice';
 import { RootState } from './store';
 
 const { Content } = Layout;
@@ -23,6 +24,7 @@ const App = () => {
 
   // * ========== Mapped from state ==========
   const notesStatus = useAppSelector((state: RootState) => state.notes.status)
+  const tagsStatus = useAppSelector((state: RootState) => state.tags.status)
   const notesFromState = useAppSelector((state: RootState) => state.notes.notes)
   const showArchived = useAppSelector((state: RootState) => state.notes.showingArchived)
   const idLastUpdatedNote = useAppSelector((state: RootState) => state.notes.idLastUpdatedNote)
@@ -71,7 +73,7 @@ const App = () => {
   }
 
   const onDeleteTag = async (id:number) => {
-    dispatch(removeTag(id))
+    // dispatch(removeTag(id))
   }
 
   const onOkModal = () => {
@@ -83,7 +85,8 @@ const App = () => {
   // * ========== UseEffects ==========
   useEffect(() => {
     if (notesStatus === 'idle') dispatch(getAll())
-  }, [dispatch, notesStatus])
+    if (tagsStatus === 'idle') dispatch(getAllTags())
+  }, [dispatch, notesStatus, tagsStatus])
 
   // Update initialValues of note being shown on Modal
   useEffect(() => {

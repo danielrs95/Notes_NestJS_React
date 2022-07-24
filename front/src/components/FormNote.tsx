@@ -1,10 +1,10 @@
-import { DeleteOutlined, PlusOutlined, TagOutlined } from '@ant-design/icons';
-import { Button, Col, Divider, Form, FormInstance, Input, List, Row, Select, Space, Switch, Tooltip, Typography } from 'antd'
+import {  PlusOutlined } from '@ant-design/icons';
+import { Button, Col, Form, FormInstance, Input, Row, Select, Switch, Tooltip } from 'antd'
 import TextArea from 'antd/lib/input/TextArea'
-import { Option } from 'antd/lib/mentions';
 import { FC, useEffect, useState } from 'react';
 import { Note } from './NotesList'
-import VirtualList from 'rc-virtual-list';
+import { useAppSelector } from '../redux/hooks';
+import { RootState } from '../store';
 
 type FormNoteProps = {
   form: FormInstance;
@@ -25,6 +25,15 @@ const FormNote: FC<FormNoteProps> = ({
   onSubmitTag,
   onDeleteTag,
 }) => {
+  // * ========== Mapped from state ==========
+  const tags = useAppSelector((state: RootState) => state.tags.tags)
+
+  // * ========== States ==========
+  const [selectedItems, setSelectedItems] = useState<any[]>([]);
+  const filteredOptions = tags.filter(o => !selectedItems.includes(o.text));
+
+  console.log({selectedItems, filteredOptions})
+
   useEffect(() => {
     form?.resetFields();
   }, [form, initialValues]);
@@ -61,59 +70,46 @@ const FormNote: FC<FormNoteProps> = ({
             </Form.Item>
           </Col>
         ) : <></>}
-
-        { initialValues ? (
-          <Col style={{ margin: "0px 20px" }}>
-            <List
-              size="small"
-              bordered
-            >
-              <VirtualList
-                data={initialValues.tags!}
-                height={250}
-                itemKey="tag"
-                style={{margin: "0"}}
-              >
-                {(item) => (
-                  <List.Item>
-                    <TagOutlined />
-                    <h4>{item.text}</h4>
-                    <Tooltip title="Delete tag">
-                      <Button
-                        size='middle'
-                        shape="circle"
-                        icon={<DeleteOutlined />}
-                        onClick={() => onDeleteTag(item.id)}
-                      />
-                    </Tooltip>
-                  </List.Item>
-                )}
-              </VirtualList>
-            </List>
-            <Form
-              form={formTag}
-              onFinish={onSubmitTag}
-              labelCol={{ span: 4 }}
-              wrapperCol={{ span: 18 }}
-              layout="inline"
-            >
-              <Form.Item hidden name="noteId" initialValue={initialValues.id} />
-              <Form.Item label="Tags" name="text" style={{ flex: "1 1 0%", margin: "10px 0" }}>
-                <Input />
-              </Form.Item>
-              <Tooltip title="Add tag">
-                <Button
-                  type="default"
-                  size='middle'
-                  shape="circle"
-                  onClick={() => formTag.submit()}
-                  style={{ margin: "10px 0", flex: "0 1 0" }}
-                  icon={<PlusOutlined />}
-                />
-              </Tooltip>
-            </Form>
-          </Col>
-        ) : null}
+        <Select
+          mode="multiple"
+          allowClear
+          style={{ width: '100%' }}
+          placeholder="Add tag to note"
+          defaultValue={
+            initialValues?.tags!.map( tag => tag.text )
+          }
+          value={selectedItems}
+          onChange={setSelectedItems}
+        >
+          {
+            filteredOptions.map(tag =>
+              <Select.Option key={tag.id} value={tag.text}>
+                {tag.text}
+              </Select.Option>
+            )
+          }
+        </Select>
+        <Form
+          form={formTag}
+          onFinish={onSubmitTag}
+          labelCol={{ span: 4 }}
+          wrapperCol={{ span: 18 }}
+          layout="inline"
+        >
+          <Form.Item label="Tags" name="text" style={{ flex: "1 1 0%", margin: "10px 0" }}>
+            <Input />
+          </Form.Item>
+          <Tooltip title="Add tag">
+            <Button
+              type="default"
+              size='middle'
+              shape="circle"
+              onClick={() => formTag.submit()}
+              style={{ margin: "10px 0", flex: "0 1 0" }}
+              icon={<PlusOutlined />}
+            />
+          </Tooltip>
+        </Form>
       </Row>
     </Form>
   )

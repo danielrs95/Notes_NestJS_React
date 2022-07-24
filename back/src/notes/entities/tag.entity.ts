@@ -1,11 +1,5 @@
 import { Note } from 'src/notes/entities/note.entity';
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  ManyToOne,
-  Column,
-  JoinColumn,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany } from 'typeorm';
 
 @Entity()
 export class Tag {
@@ -15,7 +9,6 @@ export class Tag {
   @Column()
   text: string;
 
-  @ManyToOne(() => Note, (note) => note.tags)
-  @JoinColumn({ name: 'note_id' })
-  note: Note;
+  @ManyToMany(() => Note, (note) => note.tags)
+  notes: Note[];
 }

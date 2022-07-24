@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Note } from 'src/notes/entities/note.entity';
 import { Repository } from 'typeorm';
@@ -12,19 +12,12 @@ export class TagsService {
   ) {}
 
   getAll() {
-    return this.tagRepository.find({ relations: ['note'] });
+    return this.tagRepository.find();
   }
 
   async insert(body: any) {
-    // * First we get the note, to make the relation to the tag
-    const note = await this.noteRepository.findOneBy({ id: body.noteId });
-    if (!note) throw new NotFoundException('Note does not exist');
-
-    // * Make new Tag and assign the previous note finded
-    const newTag = new Tag();
-    newTag.note = note;
-    newTag.text = body.text;
-    return this.tagRepository.save(newTag);
+    const tag = this.tagRepository.create(body);
+    return this.tagRepository.save(tag);
   }
 
   async delete(id: number) {

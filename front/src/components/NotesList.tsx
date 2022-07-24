@@ -1,5 +1,5 @@
 import { CheckOutlined, DeleteOutlined, EditOutlined, FileOutlined, FolderAddOutlined } from '@ant-design/icons';
-import { Button, Card, Col, List, Modal, notification, Row, Space, Tooltip } from 'antd'
+import { Button, Card, Col, List, Modal, notification, Row, Tooltip } from 'antd'
 import Meta from 'antd/lib/card/Meta';
 import { Dispatch, FC, SetStateAction } from 'react';
 import { useAppDispatch } from '../redux/hooks';
@@ -16,6 +16,7 @@ export type Note = {
 export type Tag = {
   id: number,
   text: string,
+  note: Note[],
 }
 
 type NotesListProps = {
