@@ -1,5 +1,4 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
-import { CreateTagDto } from '../dto/create-tag.dto';
 import { TagsService } from '../services/tags.service';
 
 @Controller('api/tags')

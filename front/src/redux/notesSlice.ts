@@ -1,12 +1,13 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
-import { Note } from "../components/NotesList";
+import { Note, Tag } from "../components/NotesList";
 
 type notesState = {
   notes: Note[],
   status: string,
   error: string | null | undefined,
   showingArchived: boolean,
+  idLastUpdatedNote: number,
 }
 
 const initialState: notesState = {
@@ -14,6 +15,7 @@ const initialState: notesState = {
   status: 'idle',
   error: null,
   showingArchived: false,
+  idLastUpdatedNote: 0,
 }
 
 export const noteSlice = createSlice({
@@ -60,6 +62,13 @@ export const noteSlice = createSlice({
           showingArchived: true,
           notes: action.payload
         }
+      })
+
+      // * addTag extra reducer
+      .addCase(addTag.fulfilled, (state, action) => {
+        const noteId = action.payload.note.id
+        state.notes.map(note => note.id === noteId ? note.tags.push(action.payload) : note)
+        state.idLastUpdatedNote = noteId
       })
   },
 })
@@ -120,6 +129,7 @@ export const archiveNote = createAsyncThunk(
     return response.data
   }
 )
+
 // * Restore Note
 export const restoreNote = createAsyncThunk(
   'notes/restoreNote',
@@ -134,6 +144,14 @@ export const restoreNote = createAsyncThunk(
   }
 )
 
+// * Inser Tag
+export const addTag = createAsyncThunk(
+  'notes/addTag',
+  async (tag: Partial<Tag>, thunkAPI) => {
+    const response = await axios.post('/api/tags', tag)
+    return response.data
+  }
+)
 
 export default noteSlice.reducer;
 

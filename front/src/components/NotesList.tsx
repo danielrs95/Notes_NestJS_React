@@ -10,6 +10,12 @@ export type Note = {
   title: string,
   content: string,
   archived: boolean,
+  tags: Tag[]
+}
+
+export type Tag = {
+  id: number,
+  text: string,
 }
 
 type NotesListProps = {
