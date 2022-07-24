@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 cd ./back
 docker-compose up -d postgres-database
