@@ -10,6 +10,11 @@ export class TagsController {
     return this.tagsService.getAll();
   }
 
+  @Get(':id')
+  getAllNotesById(@Param('id') id: number) {
+    return this.tagsService.getAllNotesById(id);
+  }
+
   @Post()
   insert(@Body() body: any) {
     return this.tagsService.insert(body);

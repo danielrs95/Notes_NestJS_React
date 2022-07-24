@@ -15,6 +15,13 @@ export class TagsService {
     return this.tagRepository.find();
   }
 
+  getAllNotesById(id: number) {
+    return this.noteRepository.find({
+      relations: { tags: true },
+      where: { tags: { id: id } },
+    });
+  }
+
   async insert(body: any) {
     const tag = this.tagRepository.create(body);
     return this.tagRepository.save(tag);
