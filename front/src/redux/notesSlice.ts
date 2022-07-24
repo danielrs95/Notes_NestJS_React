@@ -64,6 +64,12 @@ export const noteSlice = createSlice({
         }
       })
 
+      // * After update, sent idLastUpdatedNote to update initialValues on modal
+      // .addCase(updateNote.fulfilled, (state, action) => {
+      //   state.idLastUpdatedNote = action.payload.id
+
+      // })
+
       // * addTag extra reducer
       // .addCase(addTag.fulfilled, (state, action) => {
       //   const noteId = action.payload.note.id
@@ -125,6 +131,8 @@ export const updateNote = createAsyncThunk(
   'notes/updateNote',
   async (note: Partial<Note>, thunkAPI) => {
     const response = await axios.put(`/api/notes/${note.id}`, note)
+
+    // After update, use idLastUpdatedNote to update modal
     thunkAPI.dispatch(getAll())
     return response.data
   }

@@ -70,25 +70,29 @@ const FormNote: FC<FormNoteProps> = ({
             </Form.Item>
           </Col>
         ) : <></>}
-        <Select
-          mode="multiple"
-          allowClear
-          style={{ width: '100%' }}
-          placeholder="Add tag to note"
-          defaultValue={
-            initialValues?.tags!.map( tag => tag.text )
-          }
-          value={selectedItems}
-          onChange={setSelectedItems}
-        >
-          {
-            filteredOptions.map(tag =>
-              <Select.Option key={tag.id} value={tag.text}>
-                {tag.text}
-              </Select.Option>
-            )
-          }
-        </Select>
+
+        <Form.Item label="Select" name="tagsIds">
+          <Select
+            mode="multiple"
+            allowClear
+            style={{ width: '100%' }}
+            placeholder="Add tag to note"
+            defaultValue={
+              initialValues?.tags!.map( tag => tag.text )
+            }
+            value={selectedItems}
+            onChange={setSelectedItems}
+          >
+            {
+              filteredOptions.map(tag =>
+                <Select.Option key={tag.id} value={tag.id}>
+                  {tag.text}
+                </Select.Option>
+              )
+            }
+          </Select>
+        </Form.Item>
+
         <Form
           form={formTag}
           onFinish={onSubmitTag}

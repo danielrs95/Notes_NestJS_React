@@ -29,7 +29,10 @@ export class NotesService {
   }
 
   getNoteById(id: number) {
-    return this.notesRepository.findOneBy({ id });
+    return this.notesRepository.find({
+      relations: { tags: true },
+      where: { id: id },
+    });
   }
 
   async insert(body: CreateNoteDto) {
@@ -50,9 +53,25 @@ export class NotesService {
     return this.notesRepository.save(note);
   }
 
-  async update(id: number, body: CreateNoteDto) {
-    const note = await this.notesRepository.findOneBy({ id });
-    this.notesRepository.merge(note, body);
+  async update(id: number, body: any) {
+    const note = await this.notesRepository.findOne({
+      relations: { tags: true },
+      where: { id: id },
+    });
+
+    note.title = body.title;
+    note.content = body.content;
+    note.archived = body.archived;
+    note.tags = [];
+
+    if (body.tagsIds) {
+      // Get ids from body and find tags with those ids
+      const tagsIds = body.tagsIds;
+      const tags = await this.tagRepository.findByIds(tagsIds);
+      // Save tags on note instance
+      note.tags = tags;
+    }
+
     return this.notesRepository.save(note);
   }
 
