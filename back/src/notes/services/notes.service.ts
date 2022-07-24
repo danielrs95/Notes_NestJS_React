@@ -9,7 +9,8 @@ export class NotesService {
   // * Inject dependencies
   // Now we can use the methods from Repository
   constructor(
-    @InjectRepository(Note) private notesRepository: Repository<Note>,
+    @InjectRepository(Note)
+    private notesRepository: Repository<Note>,
   ) {}
 
   getAll() {
