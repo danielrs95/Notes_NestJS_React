@@ -1,10 +1,12 @@
 # Full Stack Notes App with Nest & React
 
-This is a simple web application to take notes made with Nest as the main backend framework and React as the main frontend framework.
+Minimalist web notes app made with Nest as the main backend framework and React as the main frontend framework.
 
 In order to correctly run the script that start the app the run machine must have __docker__, __docker-compose__ and __npm__.
 
-Be sure that docker service is running before running the scrip, you can use `systemctl is-active docker` to check the status and try to start the service with `sudo systemctl start docker.service`
+Before running any script, be sure that the current login user can run docker without sudo priviliges
+
+Check that docker service is running before running the scrip, you can use `systemctl is-active docker` to check the status and try to start the service with `sudo systemctl start docker.service`.
 
 The app was made with use __Postgres v13__, __NestJS v9.0__ and __React v18.2__
 
@@ -17,3 +19,8 @@ The app was made with use __Postgres v13__, __NestJS v9.0__ and __React v18.2__
     - Create and start the docker container for the database
     - Install dependencies and run server
     - Install dependencies and run client
+
+### Pending
+
+1. Login
+2. Live deployed version
