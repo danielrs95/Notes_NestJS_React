@@ -1,12 +1,12 @@
 import { CheckOutlined, CloseOutlined, FolderAddOutlined, PlusOutlined, SaveOutlined } from '@ant-design/icons';
-import { Button, Form, Layout, notification, PageHeader, Space } from 'antd';
+import { Button, Form, Layout, notification, PageHeader, Select, Space } from 'antd';
 import Modal from 'antd/lib/modal/Modal';
 import { useEffect, useState } from 'react';
 import FormNote from './components/FormNote';
 import LoadingSpin from './components/LoadingSpin';
 import NotesList, { Note, Tag } from './components/NotesList';
 import { useAppDispatch, useAppSelector } from './redux/hooks';
-import { getAll, getAllArchived, insert, updateNote } from './redux/notesSlice';
+import { getAll, getAllArchived, getNotesByIdTag, insert, updateNote } from './redux/notesSlice';
 import { addTag, getAllTags } from './redux/tagsSlice';
 import { RootState } from './store';
 
@@ -21,6 +21,18 @@ const App = () => {
   // * ========== States ==========
   const [showModal, setShowModal] = useState<boolean>(false);
   const [initialValues, setInitialValues] = useState<Note>();
+
+  // * Filter
+  const { Option } = Select;
+  const tags = useAppSelector((state: RootState) => state.tags.tags)
+  const onSelectFilter = (id: number) => {
+    if (id) {
+      dispatch(getNotesByIdTag(id))
+    } else {
+      dispatch(getAll())
+    }
+  }
+
 
   // * ========== Mapped from state ==========
   const notesStatus = useAppSelector((state: RootState) => state.notes.status)
@@ -72,15 +84,12 @@ const App = () => {
     dispatch(addTag(tag))
   }
 
-  const onDeleteTag = async (id:number) => {
-    // dispatch(removeTag(id))
-  }
-
   const onOkModal = () => {
     formNote.validateFields()
     .then(() => formNote.submit())
     .catch(err => { throw err })
   }
+
 
   // * ========== UseEffects ==========
   useEffect(() => {
@@ -129,6 +138,21 @@ const App = () => {
           >
             { showArchived ? "Back to Notes" : "Show Archived"}
           </Button>
+
+          <Select
+            allowClear
+            style={{ width: '300px' }}
+            placeholder="Select tag to filter"
+            onChange={onSelectFilter}
+          >
+            {
+              tags.map(tag =>
+                <Option key={tag.id} value={tag.id}>
+                  <span>{tag.text}</span>
+                </Option>
+              )
+            }
+          </Select>
         </Space>
       </PageHeader>
       <Content
@@ -175,7 +199,6 @@ const App = () => {
           initialValues={initialValues}
           onSubmit={submitNote}
           onSubmitTag={submitTag}
-          onDeleteTag={onDeleteTag}
           note={!!initialValues}
         />
       </Modal>

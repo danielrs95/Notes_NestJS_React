@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { Tag } from "../components/NotesList";
+import { getAll } from "./notesSlice";
 
 type tagsState = {
   tags: Tag[],
@@ -26,14 +27,6 @@ export const tagSlice = createSlice({
         }
       })
 
-      // * Mutate state after add tag
-      // .addCase(addTag.fulfilled, (state, action) => {
-      //   return {
-      //     ...state,
-      //     status: 'succeeded',
-      //     tags: action.payload
-      //   }
-      // })
   },
 })
 
@@ -55,5 +48,15 @@ export const addTag = createAsyncThunk(
     return response.data
   }
 )
+
+// * Get notes by ID
+// export const getNotesByIdTag = createAsyncThunk(
+//   'tags/getNotesByIdTag',
+//   async (id: number, thunkAPI) => {
+//     const response = await axios.get(`/api/tags/${id}`)
+//     thunkAPI.dispatch(getAll())
+//     return response.data
+//   }
+// )
 
 export default tagSlice.reducer;

@@ -13,7 +13,6 @@ type FormNoteProps = {
   note?: boolean;
   onSubmit: (note: Partial<Note>) => void;
   onSubmitTag: (note: Partial<Note>) => void;
-  onDeleteTag: (id:number) => void;
 }
 
 const FormNote: FC<FormNoteProps> = ({
@@ -23,7 +22,6 @@ const FormNote: FC<FormNoteProps> = ({
   note,
   onSubmit,
   onSubmitTag,
-  onDeleteTag,
 }) => {
   // * ========== Mapped from state ==========
   const tags = useAppSelector((state: RootState) => state.tags.tags)

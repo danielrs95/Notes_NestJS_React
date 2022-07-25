@@ -99,6 +99,16 @@ export const noteSlice = createSlice({
       //   state.notes = newState
       //   state.idLastUpdatedNote = noteWithTagDeleted!.id
       // })
+
+      // * Add filtered notes to state
+      .addCase(getNotesByIdTag.fulfilled, (state, action) => {
+        // Copy previous state and add new notes fetched
+        return {
+          ...state,
+          status: 'succeeded',
+          notes: action.payload
+        }
+      })
   },
 })
 
@@ -192,5 +202,14 @@ export const restoreNote = createAsyncThunk(
 //     return response.data
 //   }
 // )
+
+// * Get notes by ID
+export const getNotesByIdTag = createAsyncThunk(
+  'notes/getNotesByIdTag',
+  async (id: number, thunkAPI) => {
+    const response = await axios.get(`/api/tags/${id}`)
+    return response.data
+  }
+)
 
 export default noteSlice.reducer;

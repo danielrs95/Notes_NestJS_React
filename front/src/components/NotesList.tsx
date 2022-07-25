@@ -1,5 +1,5 @@
-import { CheckOutlined, DeleteOutlined, EditOutlined, FileOutlined, FolderAddOutlined } from '@ant-design/icons';
-import { Button, Card, Col, List, Modal, notification, Row, Tooltip } from 'antd'
+import { CheckOutlined, DeleteOutlined, EditOutlined, FileOutlined, FolderAddOutlined, TagOutlined } from '@ant-design/icons';
+import { Button, Card, Col, List, Modal, notification, Row, Tag, Tooltip } from 'antd'
 import Meta from 'antd/lib/card/Meta';
 import { Dispatch, FC, SetStateAction } from 'react';
 import { useAppDispatch } from '../redux/hooks';
@@ -108,7 +108,7 @@ const NotesList: FC<NotesListProps> = ({
               description={
                 <>
                   <p>{note.content}</p>
-                  <Row justify='start'>
+                  <Row justify='start' gutter={16}>
                     <Col>
                       <Tooltip title="Edit">
                         <Button
@@ -143,6 +143,11 @@ const NotesList: FC<NotesListProps> = ({
                         />
                       </Tooltip>
                     </Col>
+                    {
+                      note.tags.map(
+                        (tag) => <Tag icon={<TagOutlined/>}>{tag.text}</Tag>
+                      )
+                    }
                   </Row>
                 </>
               }
