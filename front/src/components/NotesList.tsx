@@ -1,6 +1,7 @@
 import { CheckOutlined, DeleteOutlined, EditOutlined, FileOutlined, FolderAddOutlined, TagOutlined } from '@ant-design/icons';
-import { Button, Card, Col, List, Modal, notification, Row, Tag, Tooltip } from 'antd'
+import { Button, Card, Col, List, Modal, notification, Row, Tag, Tooltip, Typography } from 'antd'
 import Meta from 'antd/lib/card/Meta';
+// import Paragraph from 'antd/lib/skeleton/Paragraph';
 import { Dispatch, FC, SetStateAction } from 'react';
 import { useAppDispatch } from '../redux/hooks';
 import { archiveNote, deleteNote, restoreNote } from '../redux/notesSlice';
@@ -27,6 +28,7 @@ type NotesListProps = {
 }
 
 const { confirm } = Modal;
+const { Paragraph } = Typography
 
 const NotesList: FC<NotesListProps> = ({
   notes,
@@ -107,7 +109,9 @@ const NotesList: FC<NotesListProps> = ({
               title={<h3>{note.title}</h3>}
               description={
                 <>
-                  <p>{note.content}</p>
+                  <Paragraph ellipsis={{ rows: 4, expandable: true, symbol: 'more' }}>
+                    {note.content}
+                  </Paragraph>
                   <Row justify='start' gutter={16}>
                     <Col>
                       <Tooltip title="Edit">
