@@ -8,7 +8,7 @@ import { Tag } from '../entities/tag.entity';
 export class TagsService {
   constructor(
     @InjectRepository(Tag) private tagRepository: Repository<Tag>,
-    @InjectRepository(Note) private noteRepository: Repository<Note>,
+    @InjectRepository(Note) private notesRepository: Repository<Note>,
   ) {}
 
   getAll() {
@@ -16,7 +16,14 @@ export class TagsService {
   }
 
   getAllNotesById(id: number) {
-    return this.noteRepository.find({
+    if (id === undefined) {
+      return this.notesRepository.find({
+        where: { archived: false },
+        relations: { tags: true },
+      });
+    }
+
+    return this.notesRepository.find({
       relations: { tags: true },
       where: { tags: { id: id } },
     });
