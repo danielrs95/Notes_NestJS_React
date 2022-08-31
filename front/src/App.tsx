@@ -102,8 +102,6 @@ const App = () => {
     if (idLastUpdatedNote !== 0) setInitialValues(lastUpdatedNote[0])
   }, [notesFromState, idLastUpdatedNote, lastUpdatedNote])
 
-  console.log(lastUpdatedNote)
-
   return (
     <Layout
       style={{

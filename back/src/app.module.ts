@@ -1,24 +1,17 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { NotesModule } from './notes/notes.module';
+import { devConfig, prodConfig } from './utils/config';
+import { config } from 'dotenv';
+
+config();
+const typeormConfig =
+  process.env.NODE_ENV === 'production' ? prodConfig : devConfig;
+
+console.log(process.env.NODE_ENV);
 
 @Module({
-  imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'postgres',
-      database: 'notesdb',
-      entities: ['dist/**/*.entity{.ts,.js}'],
-      // In production, should be using migrations!
-      synchronize: true,
-      retryDelay: 3000,
-      retryAttempts: 10,
-    }),
-    NotesModule,
-  ],
+  imports: [TypeOrmModule.forRoot(typeormConfig), NotesModule],
   controllers: [],
   providers: [],
 })
