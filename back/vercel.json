@@ -1,10 +1,6 @@
 
 {
   "version": 2,
-  "env": {
-      "URL_POSTGRESQL": "@URL_POSTGRESQL",
-      "NODE_ENV": "@NODE_ENV"
-  },
   "builds": [
       {
           "src": "src/main.ts",
