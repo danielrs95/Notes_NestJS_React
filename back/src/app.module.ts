@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { NotesModule } from './notes/notes.module';
 import { devConfig, prodConfig } from './utils/config';
 import { config } from 'dotenv';
+import { join } from 'path';
+import { ServeStaticModule } from '@nestjs/serve-static';
 
 config();
 const typeormConfig =
@@ -11,7 +13,13 @@ const typeormConfig =
 console.log(process.env.NODE_ENV);
 
 @Module({
-  imports: [TypeOrmModule.forRoot(typeormConfig), NotesModule],
+  imports: [
+    TypeOrmModule.forRoot(typeormConfig),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', '..', 'front','build'),
+    }),
+    NotesModule,
+  ],
   controllers: [],
   providers: [],
 })
