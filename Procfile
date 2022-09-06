@@ -1,1 +1,1 @@
-web: node back/src/main.ts
+web: node back/build/main.js
