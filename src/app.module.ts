@@ -16,7 +16,7 @@ console.log(process.env.NODE_ENV);
   imports: [
     TypeOrmModule.forRoot(typeormConfig),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', '..', 'front', 'build'),
+      rootPath: join(__dirname, '..', 'front', 'build'),
     }),
     NotesModule,
   ],
