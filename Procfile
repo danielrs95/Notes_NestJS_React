@@ -1,0 +1,1 @@
+web: node back/src/main.ts

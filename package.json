@@ -1,0 +1,21 @@
+{
+  "name": "githubdanielrs95-ensolvers-challenge",
+  "version": "1.0.0",
+  "description": "![appImg](front/public/APP.png)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix front && npm run build --prefix front"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danielrs95/Notes_NestJS_React.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/danielrs95/Notes_NestJS_React/issues"
+  },
+  "homepage": "https://github.com/danielrs95/Notes_NestJS_React#readme"
+}
