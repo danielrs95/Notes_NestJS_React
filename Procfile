@@ -1,1 +1,1 @@
-web: node back/build/main.js
+web: node build/main.js
