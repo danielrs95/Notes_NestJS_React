@@ -2,6 +2,8 @@
 
 ![appImg](front/public/APP.png)
 
+## [Live Preview](https://nest-note.herokuapp.com/)
+
 Minimalist web notes app made with Nest as the main backend framework and React as the main frontend framework.
 
 In order to correctly run the script that start the app the run machine must have __docker__, __docker-compose__ and __npm__.
